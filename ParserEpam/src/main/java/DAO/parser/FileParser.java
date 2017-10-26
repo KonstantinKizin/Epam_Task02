@@ -1,11 +1,83 @@
 package DAO.parser;
 
+import DAO.DAOException;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FileParser {
 
+    private final static String ATTRIBUTE = " [a-z A-Z0-9]*=\"[a-zA-Z0-9]*\"";
+    private final static Pattern ATTRIBUTE_PATTERN = Pattern.compile(ATTRIBUTE);
+    private final static String MAP_KEY = "[a-z A-Z0-9]*";
+    private final static String MAP_VALUE = "\"[a-zA-Z0-9]*\"";
+    private final static Pattern MAP_KEY_PATTERN = Pattern.compile(MAP_KEY);
+    private final static Pattern MAP_VALUE_PATTENR = Pattern.compile(MAP_VALUE);
+    private String xmlName;
+    private final XmlLoader loader = new XmlLoader(xmlName);
+
+    public FileParser(String xmlName){
+        this.xmlName = xmlName;
+    }
+
+
+    public List<Node> getNodeList() throws DAOException {
+
+        List<Node> list = new ArrayList<>();
+
+        try {
+            StringBuilder sb = loader.getLoadedText();
+            Scanner sc = new Scanner(new String(sb));
+            List<String> raw = new ArrayList<>();
+            while (sc.hasNextLine()) {
+                String element = sc.nextLine();
+                if(element.startsWith("<?")){
+                    continue;
+                }else {
+                    raw.add(element.trim());}
+            }
+
+            Deque<String> deque = new ArrayDeque<>();
+
+            String firstTag = raw.get(0);
+
+            raw.remove(0);
+
+            deque.addAll(raw);
+
+            List<String> units = makeHierarhyUnit(deque);
+
+            Deque<String > un = new ArrayDeque<>(units);
+
+            Node root = new Node();
+
+            String tag  = firstTag;
+
+            if(hasAttr(tag)){
+                List<String> attrs = getAttrList(tag);
+                Map<String , String > attrsMap = constructAttrMap(attrs);
+                root.getAttributes().putAll(attrsMap);
+            }
+
+            String rootTag = getTagName(tag);
+
+            root.setNodeName(rootTag);
+
+            buildNodes(root , un);
+
+
+            return list;
+
+        } catch (FileNotFoundException e) {
+            throw new DAOException(e);
+        }catch (IOException e){
+            throw new DAOException(e);
+        }
+
+    }
 
 
 
@@ -23,8 +95,6 @@ public class FileParser {
 
 
 
-
-
     private String[] separateOneLine(String oneLine){
         String[] separated = new String[2];
         int charPoint = oneLine.indexOf('>');
@@ -33,7 +103,6 @@ public class FileParser {
         separated[1] = oneLine.substring(charPoint + 1 , secondCharPoint );
         return separated;
     }
-
 
 
 
@@ -92,7 +161,6 @@ public class FileParser {
         String tag  = unit.get(0);
         String rootTagName = getTagName(tag);
         root.setNodeName(rootTagName);
-
         if(hasAttr(tag)){
             List<String> attrs = getAttrList(tag);
             Map<String , String > attrsMap = constructAttrMap(attrs);
@@ -187,9 +255,7 @@ public class FileParser {
     private List<String> getAttrList(String tag){
 
         List<String> attrList = new ArrayList<>();
-        String attRegExp = " [a-z A-Z0-9]*=\"[a-zA-Z0-9]*\"";
-        Pattern p1 = Pattern.compile(attRegExp);
-        Matcher m1 = p1.matcher(tag);
+        Matcher m1 = ATTRIBUTE_PATTERN.matcher(tag);
         while (m1.find()){
             String attr = m1.group().trim();
             attrList.add(attr);
@@ -198,22 +264,18 @@ public class FileParser {
     }
 
 
-    
+
 
 
     private Map<String ,String> constructAttrMap(List<String> attrList){
         Map<String , String> attrMap = new HashMap<>();
-        String keyRegExp = "[a-z A-Z0-9]*";
-        String valueRegExp = "\"[a-zA-Z0-9]*\"";
-        Pattern keyPattern = Pattern.compile(keyRegExp);
-        Pattern valuePattern = Pattern.compile(valueRegExp);
         Matcher keyMatcher;
         Matcher valueMatcher;
         String key = null;
         String value = null;
         for(String att : attrList){
-            keyMatcher = keyPattern.matcher(att);
-            valueMatcher = valuePattern.matcher(att);
+            keyMatcher = MAP_KEY_PATTERN.matcher(att);
+            valueMatcher = MAP_VALUE_PATTENR.matcher(att);
             if(keyMatcher.find()){
                 key = keyMatcher.group();
             }
