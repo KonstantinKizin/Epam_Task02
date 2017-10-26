@@ -1,7 +1,7 @@
 package DAO.impl;
 
 import DAO.DocumentDAO;
-import Entity.Document;
+import DAO.parser.Document;
 
 public class DocumentDaoImpl implements DocumentDAO {
     public Document getDocument(String xmlName) {

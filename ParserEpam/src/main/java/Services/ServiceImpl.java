@@ -2,7 +2,7 @@ package Services;
 
 import DAO.DocumentDAO;
 import DAO.impl.DocumentDaoImpl;
-import Entity.Document;
+import DAO.parser.Document;
 
 public class ServiceImpl implements Service {
 

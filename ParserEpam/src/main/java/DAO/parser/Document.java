@@ -1,4 +1,4 @@
-package Entity;
+package DAO.parser;
 
 public class Document {
 }

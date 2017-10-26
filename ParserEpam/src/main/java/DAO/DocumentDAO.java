@@ -1,6 +1,6 @@
 package DAO;
 
-import Entity.Document;
+import DAO.parser.Document;
 
 public interface DocumentDAO {
     Document getDocument(String xmlName);

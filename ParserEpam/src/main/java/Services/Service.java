@@ -1,6 +1,6 @@
 package Services;
 
-import Entity.Document;
+import DAO.parser.Document;
 
 public interface Service {
 

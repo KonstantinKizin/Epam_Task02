@@ -1,4 +1,4 @@
-package DAO.impl;
+package DAO.parser;
 
 import java.io.File;
 import java.io.IOException;
