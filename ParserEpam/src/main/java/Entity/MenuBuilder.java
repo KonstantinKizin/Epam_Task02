@@ -1,8 +1,7 @@
-package Main;
+package Entity;
 
 import DAO.parser.Document;
 import DAO.parser.Node;
-import Entity.Food;
 
 import java.util.List;
 
@@ -14,14 +13,12 @@ public class MenuBuilder {
         this.document = document;
     }
 
-    public Food constructFood(Node node){
+    private Food constructFood(Node node){
 
         Food food = new Food();
         int foodId = Integer.parseInt(node.getAttributes().get("id"));
         food.setId(foodId);
-
         List<Node> nodeList = node.getChildren();
-
         for(Node tmp : nodeList){
             if(tmp.getNodeName().equalsIgnoreCase("name")){
                 food.setName(tmp.getNodeValue());
@@ -36,6 +33,21 @@ public class MenuBuilder {
         return food;
     }
 
+
+    public Menu getMenu(){
+
+        Menu menu = new Menu();
+
+        List<Node> nodeList = this.document.getRootChilds();
+
+        for (Node tmp : nodeList){
+            if(tmp.getNodeName().equalsIgnoreCase("food")){
+                Food food = this.constructFood(tmp);
+                menu.getFoods().add(food);
+            }
+        }
+        return menu;
+    }
 
 
 

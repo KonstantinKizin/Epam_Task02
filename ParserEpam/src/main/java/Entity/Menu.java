@@ -1,18 +1,16 @@
 package Entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Menu {
 
-    private List<Food> foods;
+    private List<Food> foods = new ArrayList<>();
 
     public List<Food> getFoods() {
         return foods;
     }
 
-    public void setFoods(List<Food> foods) {
-        this.foods = foods;
-    }
 
     @Override
     public boolean equals(Object o) {

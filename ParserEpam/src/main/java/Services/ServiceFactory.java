@@ -1,13 +1,15 @@
 package Services;
 
+import Services.Impl.MenuServiceImpl;
+
 public class ServiceFactory {
     private static final ServiceFactory instance = new ServiceFactory();
 
-    private final Service service = new ServiceImpl();
+    private final MenuService service = new MenuServiceImpl();
 
     private ServiceFactory() {}
 
-    public Service getDocumentService() {
+    public MenuService getMenuService() {
 
         return service;
     }

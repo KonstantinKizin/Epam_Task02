@@ -2,13 +2,12 @@ package Main;
 
 
 import DAO.parser.Document;
-import DAO.parser.Node;
 import Entity.Food;
-import Services.Service;
+import Entity.Menu;
+import Entity.MenuBuilder;
+import Services.MenuService;
 import Services.ServiceException;
 import Services.ServiceFactory;
-
-import java.util.List;
 
 
 public class Main {
@@ -17,7 +16,7 @@ public class Main {
 
         ServiceFactory factory = ServiceFactory.getInstance();
 
-        Service service = factory.getDocumentService();
+        MenuService service = factory.getMenuService();
 
         MenuBuilder menuBuilder ;
 
@@ -27,20 +26,11 @@ public class Main {
 
             menuBuilder = new MenuBuilder(document);
 
-            Food food = null;
+            Menu menu = menuBuilder.getMenu();
 
-            List<Node> nodeList = document.getRootChilds();
+            Food food = service.findFoodById(menu , 4);
 
-            for(Node node : nodeList){
-                if(node.getNodeName().equalsIgnoreCase("food")){
-
-                    food = menuBuilder.constructFood(node);
-                    System.out.println(food);
-
-                }
-            }
-
-
+            PrintFood.print(food);
 
 
         } catch (ServiceException e) {
