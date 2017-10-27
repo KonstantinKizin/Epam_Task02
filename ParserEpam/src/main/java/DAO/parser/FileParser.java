@@ -17,10 +17,12 @@ public class FileParser {
     private final static Pattern MAP_KEY_PATTERN = Pattern.compile(MAP_KEY);
     private final static Pattern MAP_VALUE_PATTENR = Pattern.compile(MAP_VALUE);
     private String xmlName;
-    private final XmlLoader loader = new XmlLoader(xmlName);
+    private String rootName;
+    private final XmlLoader loader ;
 
     public FileParser(String xmlName){
         this.xmlName = xmlName;
+        loader = new XmlLoader(xmlName);
     }
 
 
@@ -29,6 +31,7 @@ public class FileParser {
         List<Node> list = null;
         Deque<String> deque = this.getElementsStack();
         String firstTag = deque.getFirst();
+        rootName = this.getTagName(firstTag);
         deque.removeFirst();
         list = this.createChildesNodes(deque);
         return list;
@@ -42,6 +45,7 @@ public class FileParser {
             Deque<String > unitsStack = new ArrayDeque<>(units);
             Node root = new Node();
             String tag  = unitsStack.getFirst();
+            unitsStack.removeFirst();
             if(hasAttr(tag)){
                 List<String> attrs = this.getAttrList(tag);
                 Map<String , String > attrsMap = this.constructAttrMap(attrs);
@@ -49,7 +53,7 @@ public class FileParser {
             }
             String rootTag = this.getTagName(tag);
             root.setNodeName(rootTag);
-            buildNodes(root , unitsStack);
+            buildNodesTree(unitsStack , root);
             nodes.add(root);
 
         }
@@ -202,22 +206,27 @@ public class FileParser {
 
 
 
-    private void buildNodes(Node root , Deque<String> unit){
+    private void buildNodesTree(Deque<String> unit , Node parent){
         if(!unit.isEmpty()) {
             String first = unit.getFirst();
             unit.removeFirst();
-
-            if (cheakForOneLine(first)) {
-                Node node = this.constructNodeFromOneLine(first);
-                root.getChildren().add(node);
-                buildNodes(root, unit);
+            if (first.startsWith("<") && !cheakForOneLine(first)) {
+                Node node = constructNode(first);
+                parent.getChildren().add(node);
+                node.setParent(parent);
+                buildNodesTree(unit, node);
+            } else if (cheakForOneLine(first)) {
+                Node node = constructNodeFromOneLine(first);
+                parent.getChildren().add(node);
+                node.setParent(parent);
+                buildNodesTree(unit, parent);
             } else if (first.startsWith("value:")) {
-                root.setNodeValue(first.substring(6,first.length()));
-                buildNodes(root, unit);
-            } else if (first.startsWith("<")) {
-                Node node = this.constructNode(first);
-                root.getChildren().add(node);
-                this.buildNodes(node , unit);
+                parent.setNodeValue(first.substring(6, first.length()));
+                if (parent.getParent() != null) {
+                    buildNodesTree(unit, parent.getParent());
+                } else {
+                    buildNodesTree(unit, parent);
+                }
 
             }
         }
@@ -291,6 +300,11 @@ public class FileParser {
         }
         return attrMap;
     }
+
+    public String getRootName() {
+        return rootName;
+    }
+
 
 
 

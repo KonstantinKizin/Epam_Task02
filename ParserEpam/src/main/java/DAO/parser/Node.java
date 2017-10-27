@@ -12,6 +12,16 @@ public class Node {
 
     private List<Node> children = new ArrayList<>();
 
+    private Node parent;
+
+    public Node getParent() {
+        return parent;
+    }
+
+    public void setParent(Node parent) {
+        this.parent = parent;
+    }
+
     private Map<String , String> attributes = new HashMap<>();
 
     public Map<String, String> getAttributes() {
