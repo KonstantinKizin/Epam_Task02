@@ -26,59 +26,63 @@ public class FileParser {
 
     public List<Node> getNodeList() throws DAOException {
 
-        List<Node> list = new ArrayList<>();
+        List<Node> list = null;
+        Deque<String> deque = this.getElementsStack();
+        String firstTag = deque.getFirst();
+        deque.removeFirst();
+        list = this.createChildesNodes(deque);
+        return list;
+    }
 
-        try {
-            StringBuilder sb = loader.getLoadedText();
-            Scanner sc = new Scanner(new String(sb));
-            List<String> raw = new ArrayList<>();
-            while (sc.hasNextLine()) {
-                String element = sc.nextLine();
-                if(element.startsWith("<?")){
-                    continue;
-                }else {
-                    raw.add(element.trim());}
-            }
+    private List<Node> createChildesNodes(Deque<String> deque){
 
-            Deque<String> deque = new ArrayDeque<>();
-
-            String firstTag = raw.get(0);
-
-            raw.remove(0);
-
-            deque.addAll(raw);
-
-            List<String> units = makeHierarhyUnit(deque);
-
-            Deque<String > un = new ArrayDeque<>(units);
-
+        List<Node> nodes = new ArrayList<>();
+        while (deque.size() != 1){
+            List<String> units = this.makeHierarhyUnit(deque);
+            Deque<String > unitsStack = new ArrayDeque<>(units);
             Node root = new Node();
-
-            String tag  = firstTag;
-
+            String tag  = unitsStack.getFirst();
             if(hasAttr(tag)){
-                List<String> attrs = getAttrList(tag);
-                Map<String , String > attrsMap = constructAttrMap(attrs);
+                List<String> attrs = this.getAttrList(tag);
+                Map<String , String > attrsMap = this.constructAttrMap(attrs);
                 root.getAttributes().putAll(attrsMap);
             }
-
-            String rootTag = getTagName(tag);
-
+            String rootTag = this.getTagName(tag);
             root.setNodeName(rootTag);
+            buildNodes(root , unitsStack);
+            nodes.add(root);
 
-            buildNodes(root , un);
+        }
+
+        return nodes;
+    }
 
 
-            return list;
 
-        } catch (FileNotFoundException e) {
+
+
+    private Deque<String> getElementsStack() throws DAOException {
+
+        Deque<String> deque = new ArrayDeque<>();
+        try {
+            StringBuilder sb = this.loader.getLoadedText();
+            Scanner sc = new Scanner(new String(sb));
+            while (sc.hasNextLine()) {
+                String element = sc.nextLine();
+                if (element.startsWith("<?")) {
+                    continue;
+                } else {
+                    deque.add(element.trim());
+                }
+            }
+
+        }catch (FileNotFoundException e) {
             throw new DAOException(e);
         }catch (IOException e){
             throw new DAOException(e);
         }
-
+        return deque;
     }
-
 
 
 
@@ -126,7 +130,7 @@ public class FileParser {
         String root = null;
         for(String s : xml) {
             if (hierarhy.isEmpty()) {
-                root = getTag(s);
+                root = this.getTag(s);
             }
             if(root != null){
                 if(cheakForOneLine(s)){
@@ -159,7 +163,7 @@ public class FileParser {
     private Node makeNodesFromUnit(List<String> unit){
         Node root = new Node();
         String tag  = unit.get(0);
-        String rootTagName = getTagName(tag);
+        String rootTagName = this.getTagName(tag);
         root.setNodeName(rootTagName);
         if(hasAttr(tag)){
             List<String> attrs = getAttrList(tag);
@@ -204,16 +208,16 @@ public class FileParser {
             unit.removeFirst();
 
             if (cheakForOneLine(first)) {
-                Node node = constructNodeFromOneLine(first);
+                Node node = this.constructNodeFromOneLine(first);
                 root.getChildren().add(node);
                 buildNodes(root, unit);
             } else if (first.startsWith("value:")) {
                 root.setNodeValue(first.substring(6,first.length()));
                 buildNodes(root, unit);
             } else if (first.startsWith("<")) {
-                Node node = constructNode(first);
+                Node node = this.constructNode(first);
                 root.getChildren().add(node);
-                buildNodes(node , unit);
+                this.buildNodes(node , unit);
 
             }
         }
@@ -223,12 +227,12 @@ public class FileParser {
 
     private Node  constructNodeFromOneLine(String oneLine){
         Node node = new Node();
-        String[] tagAndValue = separateOneLine(oneLine);
+        String[] tagAndValue = this.separateOneLine(oneLine);
         node.setNodeName(tagAndValue[0]);
         node.setNodeValue(tagAndValue[1]);
         if(hasAttr(oneLine)){
-            List<String> attrs = getAttrList(oneLine);
-            Map<String, String> attrsMap = constructAttrMap(attrs);
+            List<String> attrs = this.getAttrList(oneLine);
+            Map<String, String> attrsMap = this.constructAttrMap(attrs);
             node.getAttributes().putAll(attrsMap);
         }
 
@@ -243,8 +247,8 @@ public class FileParser {
         Node node = new Node();
         node.setNodeName(getTagName(tagName));
         if (hasAttr(tagName)) {
-            List<String> attrs = getAttrList(tagName);
-            Map<String, String> attrsMap = constructAttrMap(attrs);
+            List<String> attrs = this.getAttrList(tagName);
+            Map<String, String> attrsMap = this.constructAttrMap(attrs);
             node.getAttributes().putAll(attrsMap);
         }
 
