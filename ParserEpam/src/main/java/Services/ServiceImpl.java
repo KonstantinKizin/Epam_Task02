@@ -19,7 +19,6 @@ public class ServiceImpl implements Service {
         } catch (DAOException e) {
             throw new ServiceException(e);
         }
-
         return document;
     }
 }
