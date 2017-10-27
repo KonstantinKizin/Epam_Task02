@@ -3,5 +3,5 @@ package DAO;
 import DAO.parser.Document;
 
 public interface DocumentDAO {
-    Document getDocument(String xmlName);
+    Document getDocument(String xmlName) throws DAOException;
 }

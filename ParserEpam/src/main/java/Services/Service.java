@@ -4,7 +4,7 @@ import DAO.parser.Document;
 
 public interface Service {
 
-    Document getDocument(String xmlName);
+    Document getDocument(String xmlName) throws ServiceException;
 
 
 }

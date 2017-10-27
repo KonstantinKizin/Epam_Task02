@@ -17,8 +17,8 @@ public class FileParser {
     private final static Pattern MAP_KEY_PATTERN = Pattern.compile(MAP_KEY);
     private final static Pattern MAP_VALUE_PATTENR = Pattern.compile(MAP_VALUE);
     private String xmlName;
-    private String rootName;
     private final XmlLoader loader ;
+    private Node root;
 
     public FileParser(String xmlName){
         this.xmlName = xmlName;
@@ -26,15 +26,18 @@ public class FileParser {
     }
 
 
-    public List<Node> getNodeList() throws DAOException {
+    public Document getDocument() throws DAOException {
 
+        Document document = new Document();
         List<Node> list = null;
         Deque<String> deque = this.getElementsStack();
         String firstTag = deque.getFirst();
-        rootName = this.getTagName(firstTag);
+        this.root = this.constructNode(firstTag);
         deque.removeFirst();
         list = this.createChildesNodes(deque);
-        return list;
+        this.root.getChildren().addAll(list);
+        document.setRoot(this.root);
+        return document;
     }
 
     private List<Node> createChildesNodes(Deque<String> deque){
@@ -301,9 +304,6 @@ public class FileParser {
         return attrMap;
     }
 
-    public String getRootName() {
-        return rootName;
-    }
 
 
 

@@ -7,7 +7,7 @@ public class ServiceFactory {
 
     private ServiceFactory() {}
 
-    public Service getApplianceService() {
+    public Service getDocumentService() {
 
         return service;
     }

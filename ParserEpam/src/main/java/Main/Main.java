@@ -1,26 +1,33 @@
 package Main;
 
-import DAO.DAOException;
-import DAO.parser.FileParser;
+
+import DAO.parser.Document;
 import DAO.parser.Node;
+import Services.Service;
+import Services.ServiceException;
+import Services.ServiceFactory;
 
 import java.util.List;
+
 
 public class Main {
 
     public static void main(String[] args) {
 
-        FileParser fileParser = new FileParser("task02.xml");
+        ServiceFactory factory = ServiceFactory.getInstance();
+
+        Service service = factory.getDocumentService();
 
         try {
-            List<Node> nodeList = fileParser.getNodeList();
 
-            for(Node node : nodeList){
-                System.out.println(node);
-            }
-        } catch (DAOException e) {
+            Document document = service.getDocument("task02.xml");
+
+            System.out.println(document);
+
+        } catch (ServiceException e) {
             e.printStackTrace();
         }
+
 
     }
 }
