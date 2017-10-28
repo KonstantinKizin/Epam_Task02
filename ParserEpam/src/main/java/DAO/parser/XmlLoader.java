@@ -29,9 +29,8 @@ public class XmlLoader {
             while (scanner.hasNextLine()){
                 fileText.append(scanner.nextLine()+"\n");
             }
-        }catch(IOException e){
-
         }
+
         return fileText;
     }
 }

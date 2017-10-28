@@ -13,6 +13,11 @@ public class MenuBuilder {
         this.document = document;
     }
 
+
+    public Menu getMenu(){
+        return this.constructMenu();
+    }
+
     private Food constructFood(Node node){
 
         Food food = new Food();
@@ -34,12 +39,12 @@ public class MenuBuilder {
     }
 
 
-    public Menu getMenu(){
+
+
+    private Menu constructMenu(){
 
         Menu menu = new Menu();
-
         List<Node> nodeList = this.document.getRootChilds();
-
         for (Node tmp : nodeList){
             if(tmp.getNodeName().equalsIgnoreCase("food")){
                 Food food = this.constructFood(tmp);

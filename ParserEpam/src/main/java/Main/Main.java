@@ -28,7 +28,7 @@ public class Main {
 
             Menu menu = menuBuilder.getMenu();
 
-            Food food = service.findFoodById(menu , 4);
+            Food food = service.findFoodById(menu , 5);
 
             PrintFood.print(food);
 
