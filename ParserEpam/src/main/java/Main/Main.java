@@ -32,6 +32,10 @@ public class Main {
 
             PrintFood.print(food);
 
+            Food frenchToast = service.findFoodByName(menu , "French Toast");
+
+            PrintFood.print(frenchToast);
+
 
         } catch (ServiceException e) {
             e.printStackTrace();
