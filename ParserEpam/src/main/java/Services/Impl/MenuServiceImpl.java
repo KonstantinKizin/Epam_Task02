@@ -46,5 +46,21 @@ public class MenuServiceImpl implements MenuService {
         return menu.getFoods();
     }
 
+    @Override
+    public Food findFoodByName(Menu menu, String foodName) {
+
+        Food food = null;
+        for(Food tmp : menu.getFoods()){
+            if(tmp.getName().equalsIgnoreCase(foodName)){
+                food = tmp;
+                break;
+            }
+        }
+
+        return food;
+    }
+
+
+
 
 }

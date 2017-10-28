@@ -14,6 +14,9 @@ public interface MenuService {
 
     List<Food> getFoods(Menu menu);
 
+    Food findFoodByName(Menu menu , String foodName);
+
+
 
 
 }
