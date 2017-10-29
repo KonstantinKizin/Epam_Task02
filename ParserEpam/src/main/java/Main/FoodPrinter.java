@@ -2,7 +2,7 @@ package Main;
 
 import Entity.Food;
 
-public class PrintFood {
+public class FoodPrinter {
 
     public static void print(Food food){
 

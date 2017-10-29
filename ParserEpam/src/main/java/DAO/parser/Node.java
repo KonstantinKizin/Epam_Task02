@@ -23,7 +23,7 @@ public class Node {
     public void setParent(Node parent) {
         this.parent = parent;
     }
-    
+
     public Map<String, String> getAttributes() {
         return attributes;
     }

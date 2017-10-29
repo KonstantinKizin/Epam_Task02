@@ -29,11 +29,11 @@ public class Main {
 
             Food food = service.findFoodById(menu , 5);
 
-            PrintFood.print(food);
+            FoodPrinter.print(food);
 
             Food frenchToast = service.findFoodByName(menu , "French Toast");
 
-            PrintFood.print(frenchToast);
+            FoodPrinter.print(frenchToast);
 
         } catch (ServiceException e) {
             e.printStackTrace();
