@@ -14,7 +14,7 @@ public class MenuBuilder {
     }
 
 
-    public Menu getMenu(){
+    public Menu build(){
         return this.constructMenu();
     }
 
@@ -23,6 +23,7 @@ public class MenuBuilder {
         Food food = new Food();
         int foodId = Integer.parseInt(node.getAttributes().get("id"));
         food.setId(foodId);
+
         List<Node> nodeList = node.getChildren();
         for(Node tmp : nodeList){
             if(tmp.getNodeName().equalsIgnoreCase("name")){

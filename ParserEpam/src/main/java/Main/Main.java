@@ -1,6 +1,5 @@
 package Main;
 
-
 import DAO.parser.Document;
 import Entity.Food;
 import Entity.Menu;
@@ -26,7 +25,7 @@ public class Main {
 
             menuBuilder = new MenuBuilder(document);
 
-            Menu menu = menuBuilder.getMenu();
+            Menu menu = menuBuilder.build();
 
             Food food = service.findFoodById(menu , 5);
 
@@ -35,7 +34,6 @@ public class Main {
             Food frenchToast = service.findFoodByName(menu , "French Toast");
 
             PrintFood.print(frenchToast);
-
 
         } catch (ServiceException e) {
             e.printStackTrace();

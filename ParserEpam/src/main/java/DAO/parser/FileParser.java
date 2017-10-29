@@ -82,7 +82,6 @@ public class FileParser {
                     deque.add(element.trim());
                 }
             }
-
         }catch (FileNotFoundException e) {
             throw new DAOException(e);
         }catch (IOException e){
@@ -163,22 +162,6 @@ public class FileParser {
 
 
 
-
-
-
-
-    private Node makeNodesFromUnit(List<String> unit){
-        Node root = new Node();
-        String tag  = unit.get(0);
-        String rootTagName = this.getTagName(tag);
-        root.setNodeName(rootTagName);
-        if(hasAttr(tag)){
-            List<String> attrs = getAttrList(tag);
-            Map<String , String > attrsMap = constructAttrMap(attrs);
-            root.getAttributes().putAll(attrsMap);
-        }
-        return root;
-    }
 
     private boolean hasAttr(String tag){
         if(tag.contains(" ") && tag.contains("=")){
@@ -263,10 +246,9 @@ public class FileParser {
             Map<String, String> attrsMap = this.constructAttrMap(attrs);
             node.getAttributes().putAll(attrsMap);
         }
-
-
         return node;
     }
+
 
     private List<String> getAttrList(String tag){
 
@@ -295,6 +277,7 @@ public class FileParser {
             if(keyMatcher.find()){
                 key = keyMatcher.group();
             }
+
             if(valueMatcher.find()){
                 String rowValue = valueMatcher.group();
                 value = rowValue.substring(1 , rowValue.length() - 1);
