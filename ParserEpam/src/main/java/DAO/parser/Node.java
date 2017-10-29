@@ -14,6 +14,8 @@ public class Node {
 
     private Node parent;
 
+    private Map<String , String> attributes = new HashMap<>();
+
     public Node getParent() {
         return parent;
     }
@@ -21,9 +23,7 @@ public class Node {
     public void setParent(Node parent) {
         this.parent = parent;
     }
-
-    private Map<String , String> attributes = new HashMap<>();
-
+    
     public Map<String, String> getAttributes() {
         return attributes;
     }
